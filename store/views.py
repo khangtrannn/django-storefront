@@ -8,6 +8,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 
 from store.filters import ProductFilter
+from store.pagination import DefaultPagination
 from .models import Collection, OrderItem, Product, Review
 from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer
 
@@ -16,6 +17,7 @@ class ProductViewSet(ModelViewSet):
   serializer_class = ProductSerializer
   filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
   filterset_class = ProductFilter
+  pagination_class = DefaultPagination
   search_fields = ['title', 'description']
   ordering_fields = ['unit_price', 'last_update']
   
