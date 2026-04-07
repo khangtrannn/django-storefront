@@ -1,0 +1,8 @@
+- mixins
+- serializer
+  - serializers.ModelSerializer
+  - serializers.Serializer
+- deserializer
+- generic views
+  - APIView
+  - ListCreateAPIView
