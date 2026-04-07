@@ -49,6 +49,7 @@ class Order(models.Model):
   customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
   
 class OrderItem(models.Model):
+  # Django will create reverse relation from Order to OrderItem as orderitem_set
   order = models.ForeignKey(Order, on_delete=models.PROTECT)
   product = models.ForeignKey(Product, on_delete=models.PROTECT)
   quantity = models.PositiveIntegerField()
