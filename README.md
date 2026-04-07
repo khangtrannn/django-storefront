@@ -6,3 +6,11 @@
 - generic views
   - APIView
   - ListCreateAPIView
+  - RetrieveUpdateDestroyAPIView
+
+- ModelViewSet
+- ReadOnlyModelViewSet
+
+- Routers
+  - SimpleRouter
+  - DefaultRouter
