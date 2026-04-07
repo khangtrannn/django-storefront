@@ -15,3 +15,5 @@
   - SimpleRouter
   - DefaultRouter
   - Nested Router
+
+- Generic filter / django-filter
