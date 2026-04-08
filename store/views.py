@@ -14,7 +14,7 @@ from store.filters import ProductFilter
 from store.pagination import DefaultPagination
 from store.permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product, Review
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer, UpdateOrderSerializer
 
 class ProductViewSet(ModelViewSet):
   queryset = Product.objects.all()
@@ -123,6 +123,8 @@ class OrderViewSet(ModelViewSet):
   def get_serializer_class(self):
     if self.request.method == 'POST':
       return CreateOrderSerializer
+    elif self.request.method == 'PATCH':
+      return UpdateOrderSerializer
     return OrderSerializer
     
   def get_queryset(self):
