@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from store.filters import ProductFilter
 from store.pagination import DefaultPagination
@@ -74,6 +75,13 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
   queryset = Customer.objects.all()
   serializer_class = CustomerSerializer
+  permission_classes = [IsAuthenticated]
+  
+  def get_permissions(self):
+    if self.request.method == 'GET':
+      return [AllowAny()]
+    
+    return super().get_permissions()
   
   @action(detail=False, methods=['GET', 'PUT'])
   def me(self, request):
