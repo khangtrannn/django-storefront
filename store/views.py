@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from store.filters import ProductFilter
 from store.pagination import DefaultPagination
 from .models import Cart, CartItem, Collection, OrderItem, Product, Review
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, ProductSerializer, ReviewSerializer
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
 
 class ProductViewSet(ModelViewSet):
   queryset = Product.objects.all()
@@ -55,9 +55,13 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
   serializer_class = CartSerializer
   
 class CartItemViewSet(ModelViewSet):
+  http_method_names = ['get', 'post', 'patch', 'delete'] 
+  
   def get_serializer_class(self):
     if self.request.method == 'POST':
       return AddCartItemSerializer
+    elif self.request.method == 'PATCH':
+      return UpdateCartItemSerializer
     return CartItemSerializer
   
   def get_queryset(self):

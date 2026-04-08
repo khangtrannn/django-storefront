@@ -57,7 +57,7 @@ class SimpleProductSerializer(serializers.ModelSerializer):
     fields = ['id', 'title', 'unit_price']
      
 class CartItemSerializer(serializers.ModelSerializer):
-  quantity = serializers.IntegerField(write_only=True) 
+  quantity = serializers.IntegerField() 
   product = SimpleProductSerializer()
   total_price = serializers.SerializerMethodField(method_name='calculate_total_price')
   
@@ -94,6 +94,13 @@ class AddCartItemSerializer(serializers.ModelSerializer):
   class Meta:
     model = CartItem
     fields = ['product_id', 'quantity']
+    
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+  quantity = serializers.IntegerField()
+  
+  class Meta:
+    model = CartItem
+    fields = ['quantity']
 
 class CartSerializer(serializers.ModelSerializer):
   id = serializers.UUIDField(read_only=True) 
