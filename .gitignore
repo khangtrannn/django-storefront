@@ -12,6 +12,7 @@ ENV/
 # Pipenv lock and local env files
 .Python
 .python-version
+.env
 
 # Django local data
 *.sqlite3
