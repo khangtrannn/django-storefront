@@ -28,6 +28,14 @@ def create_users_for_customers(apps, schema_editor):
             )
 
 
+def drop_legacy_customer_columns(apps, schema_editor):
+    with schema_editor.connection.cursor() as cursor:
+        for column in ('email', 'first_name', 'last_name'):
+            cursor.execute('SHOW COLUMNS FROM store_customer LIKE %s', [column])
+            if cursor.fetchone():
+                cursor.execute(f'ALTER TABLE store_customer DROP COLUMN {column}')
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -42,6 +50,18 @@ class Migration(migrations.Migration):
         ),
         migrations.SeparateDatabaseAndState(
             state_operations=[
+                migrations.RemoveField(
+                    model_name='customer',
+                    name='email',
+                ),
+                migrations.RemoveField(
+                    model_name='customer',
+                    name='first_name',
+                ),
+                migrations.RemoveField(
+                    model_name='customer',
+                    name='last_name',
+                ),
                 migrations.AddField(
                     model_name='customer',
                     name='user',
@@ -54,6 +74,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             database_operations=[
+                migrations.RunPython(drop_legacy_customer_columns, migrations.RunPython.noop),
                 migrations.RunPython(create_users_for_customers, migrations.RunPython.noop),
                 migrations.RunSQL(
                     sql='ALTER TABLE store_customer MODIFY user_id bigint NOT NULL',
