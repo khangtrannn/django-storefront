@@ -13,8 +13,8 @@ from rest_framework.permissions import AllowAny, DjangoModelPermissions, IsAdmin
 from store.filters import ProductFilter
 from store.pagination import DefaultPagination
 from store.permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, ViewCustomerHistoryPermission
-from .models import Cart, CartItem, Collection, Customer, OrderItem, Product, Review
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
+from .models import Cart, CartItem, Collection, Customer, Order, OrderItem, Product, Review
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
 
 class ProductViewSet(ModelViewSet):
   queryset = Product.objects.all()
@@ -102,3 +102,7 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, Ge
       serializer.is_valid(raise_exception=True)
       serializer.save()
       return Response(serializer.data)
+    
+class OrderViewSet(ModelViewSet):
+  queryset = Order.objects.all()
+  serializer_class = OrderSerializer
