@@ -19,3 +19,10 @@
 - Generic filter / django-filter
 
 - Signal
+
+- Sending Emails
+
+- Running Background Tasks (Celery)
+  - Message Broker
+    - Redis (in-memory data store)
+    - RabbitMQ (real, enterprise-grade broker)

@@ -188,3 +188,5 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 ADMINS = [
     ('Khang', 'khangtrann8198@gmail.com')
 ]
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
