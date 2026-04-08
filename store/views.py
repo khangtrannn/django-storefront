@@ -8,10 +8,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 from store.filters import ProductFilter
 from store.pagination import DefaultPagination
+from store.permissions import IsAdminOrReadOnly
 from .models import Cart, CartItem, Collection, Customer, OrderItem, Product, Review
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
 
@@ -21,6 +22,7 @@ class ProductViewSet(ModelViewSet):
   filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
   filterset_class = ProductFilter
   pagination_class = DefaultPagination
+  permission_classes = [IsAdminOrReadOnly]
   search_fields = ['title', 'description']
   ordering_fields = ['unit_price', 'last_update']
   
@@ -36,7 +38,8 @@ class ProductViewSet(ModelViewSet):
 class CollectionViewSet(ModelViewSet):
   queryset = Collection.objects.annotate(products_count=Count('product')).all()
   serializer_class = CollectionSerializer
-
+  permission_classes = [IsAdminOrReadOnly] 
+  
   def destroy(self, request, *args, **kwargs):
     if Product.objects.filter(collection_id=kwargs['pk']).count() > 0:
       return Response({'error': 'Collection cannot be deleted because it includes one or more products.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED) 
@@ -75,15 +78,15 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
   queryset = Customer.objects.all()
   serializer_class = CustomerSerializer
-  permission_classes = [IsAuthenticated]
+  permission_classes = [IsAdminUser]
   
-  def get_permissions(self):
-    if self.request.method == 'GET':
-      return [AllowAny()]
+  # def get_permissions(self):
+  #   if self.request.method == 'GET':
+  #     return [AllowAny()]
     
-    return super().get_permissions()
+  #   return super().get_permissions()
   
-  @action(detail=False, methods=['GET', 'PUT'])
+  @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
   def me(self, request):
     (customer, created) = Customer.objects.get_or_create(user_id=request.user.id)
     
