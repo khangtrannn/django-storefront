@@ -8,11 +8,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, DjangoModelPermissions, IsAdminUser, IsAuthenticated
 
 from store.filters import ProductFilter
 from store.pagination import DefaultPagination
-from store.permissions import IsAdminOrReadOnly
+from store.permissions import FullDjangoModelPermissions, IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .models import Cart, CartItem, Collection, Customer, OrderItem, Product, Review
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
 
@@ -78,13 +78,17 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
   queryset = Customer.objects.all()
   serializer_class = CustomerSerializer
-  permission_classes = [IsAdminUser]
+  permission_classes = [IsAdminUser] # DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly
   
   # def get_permissions(self):
   #   if self.request.method == 'GET':
   #     return [AllowAny()]
     
   #   return super().get_permissions()
+  
+  @action(detail=True, permission_classes=[ViewCustomerHistoryPermission])
+  def history(self, request, pk):
+    return Response('ok') 
   
   @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
   def me(self, request):
