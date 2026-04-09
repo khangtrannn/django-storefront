@@ -75,3 +75,7 @@ Re-write the query
 Tune the database
 
 Cache the result
+
+# Caching
+Caching views (@cache_page)
+@method_decorator(cache_page(5 * 60))
