@@ -28,3 +28,17 @@
     - RabbitMQ (real, enterprise-grade broker)
 celery -A storefront worker --loglevel=info
 celery -A storefront beat --loglevel=info
+
+- pytest
+```
+pytest store/tests
+pytest store/tests/test_collections.py
+pytest store/tests/test_collections::TestCreateCollection
+pytest store/tests/test_collections::TestCreateCollection::tes_something
+pytest -k anonymous
+```
+
+@pytest.mark.skip
+
+- Continuous testing
+pytest-watch => ptw
