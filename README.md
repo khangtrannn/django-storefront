@@ -42,3 +42,36 @@ pytest -k anonymous
 
 - Continuous testing
 pytest-watch => ptw
+
+- Performance testing (locust)
+locust -f locustfiles/browse_products.py
+django-silk
+
+- Performance optimization
+Optimize the Python code
+```
+# Preload related objects
+Product.objects.select_related('...')
+Product.objects.prefetch_related('...')
+
+# Load only what you need
+Product.objects.only('title)
+Product.objects.defer('description')
+
+# Use values
+Product.objects.values()
+Product.objects.values_list()
+
+# Count properly
+Product.objects.count()
+len(Product.objects.all()) # BAD
+
+# Bulk create/update
+Product.objects.bulk_create([])
+```
+
+Re-write the query
+
+Tune the database
+
+Cache the result
